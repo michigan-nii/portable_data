@@ -139,6 +139,12 @@ dcm2nii /Users/labworker/MyStudy/run.nii \
     $HOME/Projects/MyStudy/raw/sub001/run_01/data_4.dcm
 ```
 
-and it would Just Work [TM] on both the Mac and the cluster?
+and it would Just Work [TM] on both the Mac and the cluster?  Further,
+if your lab got a Linux machine, and everyone got a separate login,
+the script above would work for all of them?  Finally, you get a cool
+new job at Nirvana State University and have to set up your work on
+their computer, and there everyone has home directories in
+`/net/psych/homes/grundoon42`, but you still need to work here
+for another year to finish up papers with current collaborators.
 
 That is what the rest of this web site will show you how to do.
