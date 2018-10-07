@@ -57,3 +57,88 @@ to the new system, create the directories that contain the symbolic
 links, and put the data directory names for the new system into the
 new symbolic links.  An example will help you see what this means.
 
+### Illustration of a simple example
+
+Suppose you work on just two computers:  one is in your lab, and it
+is a Mac running OS X, and you work on it using a common lab login,
+`labworker`; the other computer is a cluster, where the tasks that
+take longer or need extra memory run, but there you have your own
+account, `grundoon`.
+
+On the Mac, your (simplified) data looks like this.
+
+```
+/Users/labworker/MyStudy
+├── dti
+│   └── sub001
+│       ├── run_01
+│       │   └── run.nii
+│       └── run_02
+│           └── run.nii
+└── raw
+    └── sub001
+        ├── data_1.dcm
+        ├── data_2.dcm
+        ├── data_3.dcm
+        ├── data_4.dcm
+        └── data_5.dcm
+```
+
+whereas on the cluster, this looks like this.
+
+```
+/scratch/mypi/grundoon/MyStudy
+├── dti
+│   └── sub001
+│      └── run_01
+│       │   └── run.nii
+│       └── run_02
+│           └── run.nii
+└── raw
+    ├── sub001
+    │   └── run_01
+    │       ├── data_1.dcm
+    │       ├── data_2.dcm
+    │       ├── data_3.dcm
+    │       └── data_1.dcm
+    └── sub001
+        └── run_01
+            ├── data_1.dcm
+            ├── data_2.dcm
+            ├── data_3.dcm
+            └── data_1.dcm
+```
+
+If you have a script that converts the `.dcm` files to the `.nii` files,
+and in it, the code does something like this
+
+```
+cd /Users/labworker/MyStudy/dti/sub001/run_01
+dcm2nii /Users/labworker/MyStudy/run.nii \
+    /Users/labworker/MyStudy/raw/sub001/run_01/data_1.dcm \
+    /Users/labworker/MyStudy/raw/sub001/run_01/data_2.dcm \
+    /Users/labworker/MyStudy/raw/sub001/run_01/data_3.dcm \
+    /Users/labworker/MyStudy/raw/sub001/run_01/data_4.dcm
+```
+
+then you have a lot of text to change to make that runnable on the cluster
+because all of the instances of `/Users/labworker/` must be changed to
+`/scratch/mypi/grundoon`.  Sure, that can be done if you can write a script
+that searches for that text in a bunch of files and changes it.  But does
+the honors student you're helping with her project who also needs to use
+this data?
+
+Wouldn't it be better if you could instead write a script that used this
+
+```
+cd $HOME/Projects/MyStudy/dti/sub001/run_01
+dcm2nii /Users/labworker/MyStudy/run.nii \
+    $HOME/ProjectsMy/Study/raw/sub001/run_01/data_1.dcm \
+    $HOME/Projects/MyStudy/raw/sub001/run_01/data_2.dcm \
+    $HOME/Projects/MyStudy/raw/sub001/run_01/data_3.dcm \
+    $HOME/Projects/MyStudy/raw/sub001/run_01/data_4.dcm
+```
+
+and it would Just Work [TM] on both the Mac and the cluster?
+
+That is what the rest of this web site will show you how to do.
